@@ -1,4 +1,4 @@
-var root = 'http://localhost:8080/lumino/';
+var root = 'https://idealkingdom.github.io/magic/';
 var useHash = true;
 var hash = '#!';
 var router = new Navigo(root, useHash, hash);
