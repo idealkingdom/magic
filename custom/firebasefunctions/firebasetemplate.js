@@ -1,12 +1,12 @@
 
 function homepageload() {
-  $("#dataAppend").load("custom/templates/ProjectTemplate.html",function() {
+  $("#dataAppend").load('https://raw.githubusercontent.com/idealkingdom/magic/master/custom/templates/ProjectTemplate.html',function() {
         listProject();
   })
 }
 
 function logspageLoad(id){
-    $("#dataAppend").load("custom/templates/LogsTemplate.html",function() {
+    $("#dataAppend").load('https://raw.githubusercontent.com/idealkingdom/magic/master/custom/templates/Logstemplate.html',function() {
        loadandlisten(id)
   })
 }
