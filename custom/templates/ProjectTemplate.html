@@ -1,0 +1,53 @@
+<div class="addProj" style="float:right">
+					<button type="button" class="btn btn-sm btn-success" data-toggle="modal" data-target="#addProject" >Add Project</button>
+</div>
+<style type="text/css">
+						.addProj
+							{
+						position: -webkit-sticky;
+						position: sticky;
+						float: right;
+						top: 6rem;
+							}
+						</style>
+<div style="padding:40px 2px;">
+<table id="projectList" class="table table-striped">
+	<thead>
+		 <tr>
+    <th>Project</th>
+    <th>Status</th>
+  </tr>
+	</thead>
+</table>
+</div>
+
+
+<!-- modal Here -->
+
+									<div class="modal fade" id="addProject" tabindex="-1" role="dialog" aria-labelledby="addProject" aria-hidden="true">
+								<div class="modal-dialog" role="document">
+									<div class="modal-content">
+										<div class="modal-header">
+											<h5 class="modal-title" id="logTitle">Add Project</h5>
+											<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+											<span aria-hidden="true">&times;</span>
+											</button>
+										</div>
+										<div class="modal-body" ><br>
+									<div class="form-group">
+											<label>Project No.</label>
+											<input id="addProjectNo" class="form-control">
+											<label>Project Name.</label>
+											<input id="addProjectName" class="form-control">
+										</div>
+										</div>
+										<div class="modal-footer">
+											<button type="button" class="btn btn-secondary" data-dismiss="modal" id="btnCloseAddmodal">Close</button>
+											<button type="button" class="btn btn-primary" id="btnaddProject">Submit</button>
+										</div>
+									</div>
+								</div>
+							</div>
+<!-- Modal Ends -->
+
+<script src="custom/projectmain.js" type="text/javascript"></script>
