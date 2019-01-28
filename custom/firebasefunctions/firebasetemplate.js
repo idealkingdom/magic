@@ -8,6 +8,8 @@ function homepageload() {
 function logspageLoad(id){
     $("#dataAppend").load('https://raw.githubusercontent.com/idealkingdom/magic/master/custom/templates/Logstemplate.html',function() {
        loadandlisten(id)
+  },function() {
+    location.reload();
   })
 }
 

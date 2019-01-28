@@ -13,8 +13,13 @@ $(document).ready(function() {
 	  			location.replace("https://idealkingdom.github.io/magic/")
 	  		}, 3000);
 	  	}
-	  	logspageLoad(params.id)
-	    passID = params.id
+	     passID = params.id
+	  	$(document).ready(function() {
+	  			  	logspageLoad(params.id)
+
+	  	});
+
+
 	},
 	  '*':function() {
 	  	homepageload()
