@@ -12,7 +12,7 @@ $(function() {
         e.preventDefault();
         if ($(this).siblings('textarea').val().trim() != '') {
 
-            firebaseAddComment($(this), "haha", $(this).siblings('textarea').val().trim())
+            firebaseAddComment($(this),  localStorage.getItem("Tester"), $(this).siblings('textarea').val().trim())
             $(this).siblings('textarea').val('')
         } else {
             alert('error fucking shit')
@@ -36,7 +36,7 @@ $(function() {
     $('#btnaddLogs').click(function(event) {
         /* Act on the event */
         a = $('#addLogstextarea').val()
-        firebaseAddLogs(a, 'Jeff', imgsrc)
+        firebaseAddLogs(a, localStorage.getItem("Tester"), imgsrc)
     });
 
     function delComment(e) {
@@ -58,7 +58,7 @@ $(function() {
         var newText = '' + $('#editTextarea').val()
         a.text(newText)
         $('#editModal').hide('slow/400/fast').modal('hide')
-        firebaseEditComment(editC, 'Jeff', newText);
+        firebaseEditComment(editC, localStorage.getItem("Tester"), newText);
     }
 
     $("#addModal").on("hide.bs.modal", function() {
