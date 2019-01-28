@@ -8,8 +8,6 @@ function homepageload() {
 function logspageLoad(id){
     $("#dataAppend").load('https://raw.githubusercontent.com/idealkingdom/magic/master/custom/templates/Logstemplate.html',function() {
        loadandlisten(id)
-  },function() {
-    location.reload();
   })
 }
 
@@ -119,11 +117,13 @@ database.ref('Logs/'+id).once('value', function(snapshot) {
 
 
 
+}
 
 
-
-
-database.ref('LogsComments/'+id).on("value",function(snapshot) {
+function commentLoaded (id) {
+jQuery(document).ready(function($) {
+  setTimeout(function() {
+     database.ref('LogsComments/'+id).on("value",function(snapshot) {
           snapshot.forEach( function(element, index) {
             $(`#${element.key}`).html("")
              database.ref('LogsComments/'+id+'/'+element.key).on('child_added',function(snap2) {
@@ -145,12 +145,9 @@ database.ref('LogsComments/'+id).on("value",function(snapshot) {
 
           });
 
-})
+}) 
+  }, 500);
 
-
-
-
-
-
+});
 
 }

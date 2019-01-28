@@ -15,8 +15,11 @@ $(document).ready(function() {
 	  	}
 	     passID = params.id
 	  	$(document).ready(function() {
-	  			  	logspageLoad(params.id)
-
+	  		setTimeout(function() {
+	  			logspageLoad(params.id)
+	  			commentLoaded(params.id)
+	  		}, 400);
+	  			  	
 	  	});
 
 
