@@ -3,12 +3,13 @@ var pno = $('#addProjectNo');
 var pname = $('#addProjectName');
 jQuery(document).ready(function($) {
 	$("#btnaddProject").click(function(event) {
-	firebaseAddProject(pno.val(),pname.val());
+	firebaseAddProject(pno.val(),pname.val(),passTester);
 });
 
-function firebaseAddProject(pno,pname) {
+function firebaseAddProject(pno,pname,tester) {
 	data = {
-			projectName:pname}
+			projectName:pname,
+			tester: tester}
 	database.ref("Project/"+pno).once("value",snapshot => {
 		    snapshot.exists() ? alert("Project Exists!") : database.ref("Project/"+pno).set(data).then(function() {
 		    	alert("Project succesfully added!")
