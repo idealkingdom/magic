@@ -84,13 +84,15 @@ $(function() {
                     storageRef.child('imagesBlob/' + passID + '/' + snapshot.key +'/'+snapshot.key).getDownloadURL().then(function(result) {
                         data.canvas = result
                         database.ref('Logs/' + passID).child(snapshot.key).set(data);
-                        $('#addModal').hide('slow/200/fast').modal('hide')
-                        $(`#h${snapshot.key}`).attr('href',result)
-                        $(`#img${snapshot.key}`).attr('src',result)
+                        $('#addModal').hide('slow/200/fast',function() {
+                        	location.reload();
+                        })
 
                     }).catch(function(e) {
                         console.log("Added data without picture" + e)
-                        $('#addModal').hide('slow/200/fast').modal('hide');
+                        $('#addModal').hide('slow/200/fast',function() {
+                        	location.reload();
+                        });
                     })
                 })
             })
@@ -98,12 +100,17 @@ $(function() {
             database.ref('Logs/' + passID).push(data).then(function(snapshot) {
             	data.canvas = ''
             	setTimeout(function() {
-            		database.ref('Logs/' + passID).child(snapshot.key).set(data)
+            		database.ref('Logs/' + passID).child(snapshot.key).set(data).then(function() {
+            			location.reload();
+            		})
+            		
             	}, 0);
             	
             })
             $('#addModal').hide('slow/200/fast').modal('hide')
         }
+
+
     }
 
 

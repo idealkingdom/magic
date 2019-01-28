@@ -60,52 +60,52 @@ database.ref('Logs/'+id).once('value', function(snapshot) {
 
 
 
-        database.ref('Logs/'+id).orderByKey().limitToLast(1).on('child_changed', function(snapshot) {
-       $('#tblData').append(`<div class="form-group tbl" id="logtbl${snapshot.key}" align="left" style="border: 2px solid gray; padding: 10px;">
-                <div >
-                  <table>
-                    <caption></caption>
-                    <thead>
-                      <tr>
-                        <th></th>
-                        <th>Details</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td>Error Id</td>
-                        <td style="background-color: white;" class ="logID"id="logID${snapshot.key}">${snapshot.key}</td>
-                      </tr>
-                      <tr>
-                        <td>Tester</td>
-                        <td style="background-color: white;">${snapshot.val()['tester']}</td>
-                      </tr>
-                      <tr>
-                        <td>Description</td>
-                        <td style="background-color: white;" class="descComment" id="descComment${snapshot.key}">${snapshot.val()['description']} <br/><br/>
-                        <a id="h${snapshot.key}" href="${snapshot.val()['canvas']}" target="_blank"><img id="img${snapshot.key}" style="max-width:950px; min-width:0px;" class="img-fluid" src="${snapshot.val()['canvas']}" alt=""> </a> 
-                        </td>
-                      </tr>
-                      <div align="middle">
-                      <table style="margin-top: 4%;" width="800px" class="commentTbl" id="${snapshot.key}">
-                        <tbody>
-                        </tbody>
-                      </table>
-                    </tbody>
-                  </table>
-                  </div>
-                  <div class="form-group">
-                    <label>Comment</label>
-                    <textarea class="form-control" rows="3" style="resize: none;" width="800px"></textarea>
-                    <button type="submit" id="comment142" class="btn btn-primary submitComment" style="float:right; margin-top: 2px;">Add comment</button>
-                  </div>
-                </div>
-              </div>`)
+//         database.ref('Logs/'+id).orderByKey().limitToLast(1).on('child_changed', function(snapshot) {
+//        $('#tblData').append(`<div class="form-group tbl" id="logtbl${snapshot.key}" align="left" style="border: 2px solid gray; padding: 10px;">
+//                 <div >
+//                   <table>
+//                     <caption></caption>
+//                     <thead>
+//                       <tr>
+//                         <th></th>
+//                         <th>Details</th>
+//                       </tr>
+//                     </thead>
+//                     <tbody>
+//                       <tr>
+//                         <td>Error Id</td>
+//                         <td style="background-color: white;" class ="logID"id="logID${snapshot.key}">${snapshot.key}</td>
+//                       </tr>
+//                       <tr>
+//                         <td>Tester</td>
+//                         <td style="background-color: white;">${snapshot.val()['tester']}</td>
+//                       </tr>
+//                       <tr>
+//                         <td>Description</td>
+//                         <td style="background-color: white;" class="descComment" id="descComment${snapshot.key}">${snapshot.val()['description']} <br/><br/>
+//                         <a id="h${snapshot.key}" href="${snapshot.val()['canvas']}" target="_blank"><img id="img${snapshot.key}" style="max-width:950px; min-width:0px;" class="img-fluid" src="${snapshot.val()['canvas']}" alt=""> </a> 
+//                         </td>
+//                       </tr>
+//                       <div align="middle">
+//                       <table style="margin-top: 4%;" width="800px" class="commentTbl" id="${snapshot.key}">
+//                         <tbody>
+//                         </tbody>
+//                       </table>
+//                     </tbody>
+//                   </table>
+//                   </div>
+//                   <div class="form-group">
+//                     <label>Comment</label>
+//                     <textarea class="form-control" rows="3" style="resize: none;" width="800px"></textarea>
+//                     <button type="submit" id="comment142" class="btn btn-primary submitComment" style="float:right; margin-top: 2px;">Add comment</button>
+//                   </div>
+//                 </div>
+//               </div>`)
 
 
 
 
-})
+// })
 
 
 
@@ -126,14 +126,36 @@ function commentLoaded (id) {
           snapshot.forEach( function(element, index) {
             $(`#${element.key}`).html("")
              database.ref('LogsComments/'+id+'/'+element.key).on('child_added',function(snap2) {
-            $(`#${element.key}`).append(`<tr id ="${snap2.key}">
+
+              if(snap2.val()['name'] == localStorage.getItem("Tester")){
+              $(`#${element.key}`).append(`<tr id ="${snap2.key}">
             <td style="background-color: skyblue;font-size: 10px;width:20%;">
             ${snap2.val()['name']}
             </td>
             <td style="width:80%;background-color:white;white-space: pre-wrap;">${snap2.val()['comment']}</td>
             <td ><div><button class="btn btn-sm btn-info editComment" data-toggle="modal" data-target="#editModal" style="float:right;">Edit</button>
             <button class="btn btn-sm btn-danger delComment"  id="delComment" style="float:right;">Delete</button></div></tr>`)
+
+              }
+              else{
+            $(`#${element.key}`).append(`<tr id ="${snap2.key}" >
+            <td style="background-color: skyblue;font-size: 10px;width:20%;">
+            ${snap2.val()['name']}
+            </td>
+            <td style="width:80%;background-color:skyblue;white-space: pre-wrap;">${snap2.val()['comment']}</td>
+            <td ><div><button class="btn btn-sm btn-info editComment" disabled data-toggle="modal" data-target="#editModal" style="float:right;">Edit</button>
+            <button class="btn btn-sm btn-danger delComment" disabled id="delComment" style="float:right;">Delete</button></div></tr>`)
+              }
+
+
+
+
              })
+
+
+
+
+
 
 
              database.ref('LogsComments/'+id+'/'+element.key).on('child_removed',function(snap2) {
