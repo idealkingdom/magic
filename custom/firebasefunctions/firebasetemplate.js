@@ -122,12 +122,11 @@ database.ref('Logs/'+id).once('value', function(snapshot) {
 
 function commentLoaded (id) {
   setTimeout(function() {
-     database.ref('LogsComments/'+id).once("value",function(snapshot) {
+     database.ref('LogsComments/'+id).on("value",function(snapshot) {
           snapshot.forEach( function(element, index) {
             $(`#${element.key}`).html("")
              database.ref('LogsComments/'+id+'/'+element.key).on('child_added',function(snap2) {
-                    console.log(snap2.val())
-              $(`#${element.key}`).append(`<tr id ="${snap2.key}">
+            $(`#${element.key}`).append(`<tr id ="${snap2.key}">
             <td style="background-color: skyblue;font-size: 10px;width:20%;">
             ${snap2.val()['name']}
             </td>
@@ -135,6 +134,7 @@ function commentLoaded (id) {
             <td ><div><button class="btn btn-sm btn-info editComment" data-toggle="modal" data-target="#editModal" style="float:right;">Edit</button>
             <button class="btn btn-sm btn-danger delComment"  id="delComment" style="float:right;">Delete</button></div></tr>`)
              })
+
 
              database.ref('LogsComments/'+id+'/'+element.key).on('child_removed',function(snap2) {
                         $(`#${snap2.key}`).hide('slow/400/fast', function() {

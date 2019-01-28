@@ -14,13 +14,12 @@ $(document).ready(function() {
 	  		}, 3000);
 	  	}
 	     passID = params.id
-	  	$(document).ready(function() {
-	  		setTimeout(function() {
 	  			logspageLoad(params.id)
-	  			commentLoaded(params.id)
-	  		}, 400);
-	  			  	
-	  	});
+	  			setTimeout(function() {
+	  				commentLoaded(params.id)
+	  				location.replace('#logs/'+params.id)
+	  			}, 200);
+	  			
 
 
 	},
