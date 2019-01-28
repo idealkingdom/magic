@@ -120,7 +120,6 @@ database.ref('Logs/'+id).once('value', function(snapshot) {
 
 database.ref('LogsComments/'+id).on("value",function(snapshot) {
           snapshot.forEach( function(element, index) {
-            console.log(element.val())
             $(`#${element.key}`).html("")
              database.ref('LogsComments/'+id+'/'+element.key).on('child_added',function(snap2) {
                     console.log(snap2.val())
@@ -134,7 +133,6 @@ database.ref('LogsComments/'+id).on("value",function(snapshot) {
              })
 
              database.ref('LogsComments/'+id+'/'+element.key).on('child_removed',function(snap2) {
-                    console.log(snap2.key)
                         $(`#${snap2.key}`).hide('slow/400/fast', function() {
                               $(`#${element.key} > tbody > #${snap2.key}`).remove()
                                                       });

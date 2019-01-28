@@ -7,6 +7,12 @@ $(document).ready(function() {
 	router
 	.on({
 	  'logs/:id':function(params) {
+	  	if(localStorage.getItem("Tester")===null){
+	  		document.write("No tester set go back to homepage first! You will be redirected in 3 seconds.")
+	  		setTimeout(function() {
+	  			location.replace("https://idealkingdom.github.io/magic/")
+	  		}, 3000);
+	  	}
 	  	logspageLoad(params.id)
 	    passID = params.id
 	},
