@@ -7,11 +7,8 @@ $(function() {
     var currentDate = new Date();
     var editC = ""
     $('#tblData').on('click', '.submitComment', function(e) {
-
-
         e.preventDefault();
         if ($(this).siblings('textarea').val().trim() != '') {
-
             firebaseAddComment($(this),  localStorage.getItem("Tester"), $(this).siblings('textarea').val().trim())
             $(this).siblings('textarea').val('')
         } else {

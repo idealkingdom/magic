@@ -60,13 +60,6 @@ database.ref('Logs/'+id).once('value', function(snapshot) {
 
 
 
-})
-
-
-                            
-
-
-
         database.ref('Logs/'+id).on('child_changed', function(snapshot) {
        $('#tblData').append(`<div class="form-group tbl" id="logtbl${snapshot.key}" align="left" style="border: 2px solid gray; padding: 10px;">
                 <div >
@@ -113,6 +106,16 @@ database.ref('Logs/'+id).once('value', function(snapshot) {
 
 
 })
+
+
+
+})
+
+
+                            
+
+
+
 
 
 
