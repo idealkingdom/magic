@@ -3,7 +3,7 @@ var pno = $('#addProjectNo');
 var pname = $('#addProjectName');
 jQuery(document).ready(function($) {
 	$("#btnaddProject").click(function(event) {
-	firebaseAddProject(pno.val(),pname.val(),passTester);
+	firebaseAddProject(pno.val(),pname.val(),localStorage.getItem("Tester"));
 });
 
 function firebaseAddProject(pno,pname,tester) {
