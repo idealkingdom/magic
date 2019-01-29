@@ -68,47 +68,83 @@ $(function() {
     });
 
     function firebaseAddLogs(desc, tester, canvas) {
-    	tobeready = 1
+		$('#btnaddLogs').attr('disabled', 'disabled');
         data = {
+        	projectID: passID,
             description: desc,
             tester: tester,
-            canvas: 'none'
+            stamp:firebase.firestore.FieldValue.serverTimestamp()
         }
-        $('#btnaddLogs').attr('disabled', 'disabled');
-        if (canvas) {
-            database.ref('Logs/' + passID).push(data).then(function(snapshot) {
-                var pfile = storageRef.child('imagesBlob/' + passID + '/' + snapshot.key +'/'+snapshot.key).put(canvas)
+
+        db.collection("Logs").add(data)
+        .then(function(docRef) {
+        	if (canvas){
+        	var pfile = storageRef.child('imagesBlob/' + passID + '/'+docRef.id+'/'+docRef.id).put(canvas)
                 pfile.on(firebase.storage.TaskEvent.STATE_CHANGED,null, function(e) {
                     console.log('Upload Error' + e)
                 }, function() {
-                    storageRef.child('imagesBlob/' + passID + '/' + snapshot.key +'/'+snapshot.key).getDownloadURL().then(function(result) {
+                    storageRef.child('imagesBlob/' + passID + '/'+docRef.id+'/'+docRef.id).getDownloadURL().then(function(result) {
                         data.canvas = result
-                        database.ref('Logs/' + passID).child(snapshot.key).set(data);
-                        $('#addModal').hide('slow/200/fast',function() {
-                        	location.reload();
-                        })
-
+                        db.collection("Logs").doc(docRef.id).set(data)
+                        $('#addModal').hide('slow/200/fast').modal('hide');
+                        $('#h'+docRef.id).attr('href',result)
+                        $('#img'+docRef.id).attr('src',result)
                     }).catch(function(e) {
                         console.log("Added data without picture" + e)
-                        $('#addModal').hide('slow/200/fast',function() {
-                        	location.reload();
-                        });
+                        $('#addModal').hide('slow/200/fast').modal('hide');
                     })
-                })
-            })
-        } else {
-            database.ref('Logs/' + passID).push(data).then(function(snapshot) {
-            	data.canvas = ''
-            	setTimeout(function() {
-            		database.ref('Logs/' + passID).child(snapshot.key).set(data).then(function() {
-            			location.reload();
-            		})
+                })  		
+        	}else {
+        		     $('#addModal').hide('slow/200/fast').modal('hide');
+        	}
+
+
+        }).catch(function(err) {
+        	console.log(err)
+        })
+        
+
+
+
+
+
+
+
+
+        // if (canvas) {
+        //     database.ref('Logs/' + passID).push(data).then(function(snapshot) {
+        //         var pfile = storageRef.child('imagesBlob/' + passID + '/' + snapshot.key +'/'+snapshot.key).put(canvas)
+        //         pfile.on(firebase.storage.TaskEvent.STATE_CHANGED,null, function(e) {
+        //             console.log('Upload Error' + e)
+        //         }, function() {
+        //             storageRef.child('imagesBlob/' + passID + '/' + snapshot.key +'/'+snapshot.key).getDownloadURL().then(function(result) {
+        //                 data.canvas = result
+        //                 database.ref('Logs/' + passID).child(snapshot.key).set(data);
+        //                 $('#addModal').hide('slow/200/fast',function() {
+        //                 	location.reload();
+        //                 })
+
+        //             }).catch(function(e) {
+        //                 console.log("Added data without picture" + e)
+        //                 $('#addModal').hide('slow/200/fast',function() {
+        //                 	location.reload();
+        //                 });
+        //             })
+        //         })
+        //     })
+        // } else {
+        //     database.ref('Logs/' + passID).push(data).then(function(snapshot) {
+        //     	data.canvas = ''
+        //     	setTimeout(function() {
+        //     		database.ref('Logs/' + passID).child(snapshot.key).set(data).then(function() {
+        //     			location.reload();
+        //     		})
             		
-            	}, 0);
+        //     	}, 0);
             	
-            })
-            $('#addModal').hide('slow/200/fast').modal('hide')
-        }
+        //     })
+        //     $('#addModal').hide('slow/200/fast').modal('hide')
+        // // }
 
 
     }
@@ -117,17 +153,24 @@ $(function() {
     function firebaseAddComment(id, name, comment) {
         var nearId = id.closest('.tbl').find(".logID").text()
         data = {
+        	projectID: passID,
+        	log_comment: nearId,
             name: name,
-            comment: comment
+            comment: comment,
+            stamp: firebase.firestore.FieldValue.serverTimestamp()
         }
-        database.ref('LogsComments/' + passID + '/' + nearId).push(data)
+        db.collection('LogsComments').add(data).then(function() {
+        	console.log(data)
+        })
     }
 
     function firebaseRemoveComment(id) {
         var nearId = id.closest('table').attr('id');
         var Id = id.closest('tr').attr('id');
         console.log(passID, nearId , Id)
-        database.ref('LogsComments/' + passID + '/' + nearId).child(Id).set(null)
+        db.collection('LogsComments').doc(Id).delete().then(function() {
+        	console.log('comment successfully removed!')
+        })
     }
 
     function firebaseEditComment(id, name, comment) {
@@ -135,10 +178,9 @@ $(function() {
         var Id = id.closest('tr').attr('id')
         console.log(Id , nearId)
         data = {
-            name: name,
             comment: comment
         }
-        database.ref('LogsComments/' + passID + '/' + nearId ).child(Id).set(data)
+        db.collection('LogsComments/').doc(Id).update(data)
     }
 
 

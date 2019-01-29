@@ -19,9 +19,7 @@ $(document).ready(function() {
 	  				commentLoaded(params.id)
 	  				location.replace('#logs/'+params.id)
 	  			}, 200);
-	  			
-
-
+	  		
 	},
 	  '*':function() {
 	  	homepageload()

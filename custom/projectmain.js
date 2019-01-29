@@ -7,18 +7,28 @@ jQuery(document).ready(function($) {
 });
 
 function firebaseAddProject(pno,pname,tester) {
+	var exist = 0;
 	data = {
+			projectNo : pno,
 			projectName:pname,
-			tester: tester}
-	database.ref("Project/"+pno).once("value",snapshot => {
-		    snapshot.exists() ? alert("Project Exists!") : database.ref("Project/"+pno).set(data).then(function() {
-		    	alert("Project succesfully added!")
-		    	pmodal.hide('slow/200/fast').modal('hide')
-		    }, function(err) {
-		    	alert("database error!"+err)
-		    	pmodal.hide('slow/200/fast').modal('hide')
-		    });
-	})
+			tester: tester,
+		    stamp: firebase.firestore.FieldValue.serverTimestamp()}
+	 db.collection("Projects").where("projectNo","==",""+pno).get().then(function(docSnapshot) {
+	 				docSnapshot.forEach( function(snap) {
+	 					if (snap.exists){
+	 							alert("Project already exists")
+	 							exist = 1;
+	 							pmodal.hide('slow/400/fast').modal('hide');
+	 					}
+	 				})
+	 }).then(function() {
+	 	if (exist == 0) {
+	 				 		db.collection("Projects").doc(pno).set(data).then(function() {
+	 							console.log('Project Added')
+	 							pmodal.hide('slow/400/fast').modal('hide');
+	 						})
+	 	}
+	 })
 }
 
 
@@ -29,12 +39,12 @@ function firebaseAddProject(pno,pname,tester) {
 
 
 function listProject() {
-		  database.ref("Project").on("child_added",snapshot =>{
-      		$('#projectList').append(`<tr>
-    		<td style="text-align:center;"><a href="#logs/${snapshot.key}">${snapshot.key} - ${snapshot.val()['projectName']}</></td>
-  				</tr>
-				`);
-  			})
+		  db.collection("Projects").orderBy("stamp","asc").get().then(function(querySnapshot) {
+		  		querySnapshot.forEach( function(docs) {
+		  			console.log(docs.data())
+		  			$('#projectList').append(`<tr><td><a href="#logs/${docs.data()['projectNo']}">${docs.data()['projectNo']}</a></td><tr>`)
+		  		});
+		  })
 }
 
 
