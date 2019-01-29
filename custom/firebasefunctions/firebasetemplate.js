@@ -122,11 +122,10 @@ database.ref('Logs/'+id).once('value', function(snapshot) {
 
 function commentLoaded (id) {
   setTimeout(function() {
-     database.ref('LogsComments/'+id).on("value",function(snapshot) {
+     database.ref('LogsComments/'+id).once("value",function(snapshot) {
           snapshot.forEach( function(element, index) {
             $(`#${element.key}`).html("")
              database.ref('LogsComments/'+id+'/'+element.key).on('child_added',function(snap2) {
-
               if(snap2.val()['name'] == localStorage.getItem("Tester")){
               $(`#${element.key}`).append(`<tr id ="${snap2.key}">
             <td style="background-color: skyblue;font-size: 10px;width:20%;">
@@ -135,7 +134,6 @@ function commentLoaded (id) {
             <td style="width:80%;background-color:white;white-space: pre-wrap;">${snap2.val()['comment']}</td>
             <td ><div><button class="btn btn-sm btn-info editComment" data-toggle="modal" data-target="#editModal" style="float:right;">Edit</button>
             <button class="btn btn-sm btn-danger delComment"  id="delComment" style="float:right;">Delete</button></div></tr>`)
-
               }
               else{
             $(`#${element.key}`).append(`<tr id ="${snap2.key}" >
@@ -143,11 +141,9 @@ function commentLoaded (id) {
             ${snap2.val()['name']}
             </td>
             <td style="width:80%;background-color:skyblue;white-space: pre-wrap;">${snap2.val()['comment']}</td>
-            <td ><div><button class="btn btn-sm btn-info editComment" disabled data-toggle="modal" data-target="#editModal" style="float:right;">Edit</button>
-            <button class="btn btn-sm btn-danger delComment" disabled id="delComment" style="float:right;">Delete</button></div></tr>`)
+            <td><div><button class="btn btn-sm btn-info  " disabled   style="float:right;">Edit</button>
+            <button class="btn btn-sm btn-danger  " disabled  id="" style="float:right;">Delete</button></div></td></tr>`)
               }
-
-
 
 
              })
