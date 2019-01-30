@@ -184,7 +184,7 @@ $(document).ready(function() {
   snapshot.docChanges().forEach( function(change) {
     if (change.type === "added"){
         setTimeout(function() {
-                      if(change.doc.data()['name'] == localStorage.getItem("Tester")){
+              if(change.doc.data()['name'] == localStorage.getItem("Tester")){
             $(`#${change.doc.data()['log_comment']}`).eq(0).append(`<tr id ="${change.doc.id}">
             <td style="background-color: skyblue;font-size: 10px;width:20%;">
             ${change.doc.data()['name']}
@@ -207,7 +207,7 @@ $(document).ready(function() {
     }
     if (change.type==="removed"){
                               $(`#${change.doc.id}`).hide('slow/400/fast', function() {
-                              $(`#${change.doc.data()['log_comment']} > tbody > #${snap2.key}`).remove()
+                              $(`#${change.doc.data()['log_comment']} > tbody > #${change.doc.id}`).remove()
                                                       });
     }
     if (change.type==="modified"){
