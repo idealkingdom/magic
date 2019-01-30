@@ -179,8 +179,10 @@ setTimeout(function() {
 
 
 function commentLoaded (id) {
-$(document).ready(function() {
+
   db.collection("LogsComments").where("projectID","==",passID).orderBy("stamp","asc").onSnapshot(function(snapshot) {
+
+
   snapshot.docChanges().forEach( function(change) {
     if (change.type === "added"){
         setTimeout(function() {
@@ -217,7 +219,7 @@ $(document).ready(function() {
   });
 
 })
-});
+
 
 //   setTimeout(function() {
 //      database.ref('LogsComments/'+id).once("value",function(snapshot) {

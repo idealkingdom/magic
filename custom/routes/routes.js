@@ -14,11 +14,15 @@ $(document).ready(function() {
 	  		}, 3000);
 	  	}
 	     passID = params.id
-	  			logspageLoad(params.id)
-	  			setTimeout(function() {
+	     sequencePromise = new Promise((resolve,reject) => {
+	     	resolve(logspageLoad(params.id))
+	     	$(window).bind("load", function() {
 	  				commentLoaded(params.id)
-	  				location.replace('#logs/'+params.id)
-	  			}, 200);
+			});
+	     })
+
+
+
 	  		
 	},
 	  '*':function() {
