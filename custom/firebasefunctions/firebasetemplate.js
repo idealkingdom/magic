@@ -194,7 +194,7 @@ $(document).ready(function() {
             <button class="btn btn-sm btn-danger delComment"  id="delComment" style="float:right;">Delete</button></div></tr>`)
               }
               else{
-            $(`#${change.doc.data()['log_comment']}`).append(`<tr id ="${change.doc.id}" >
+            $(`#${change.doc.data()['log_comment']}`).eq(0).append(`<tr id ="${change.doc.id}" >
             <td style="background-color: skyblue;font-size: 10px;width:20%;">
             ${change.doc.data()['name']}
             </td>
