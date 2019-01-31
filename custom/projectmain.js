@@ -1,18 +1,20 @@
 var pmodal = $("#addProject");
 var pno = $('#addProjectNo');
 var pname = $('#addProjectName');
+var pnote = $('#addProjectNote')
 jQuery(document).ready(function($) {
 	$("#btnaddProject").click(function(event) {
-	firebaseAddProject(pno.val(),pname.val(),localStorage.getItem("Tester"));
+	firebaseAddProject(pno.val(),pname.val(),localStorage.getItem("Tester"),pnote.text());
 });
 
-function firebaseAddProject(pno,pname,tester) {
+function firebaseAddProject(pno,pname,tester,note) {
 	var exist = 0;
 	data = {
 			projectNo : pno,
 			projectName:pname,
 			tester: tester,
-		    stamp: firebase.firestore.FieldValue.serverTimestamp()}
+		    stamp: firebase.firestore.FieldValue.serverTimestamp(),
+			Note:note}
 	 db.collection("Projects").where("projectNo","==",""+pno).get().then(function(docSnapshot) {
 	 				docSnapshot.forEach( function(snap) {
 	 					if (snap.exists){
@@ -42,7 +44,7 @@ function listProject() {
 		  db.collection("Projects").orderBy("stamp","asc").get().then(function(querySnapshot) {
 		  		querySnapshot.forEach( function(docs) {
 		  			console.log(docs.data())
-		  			$('#projectList').append(`<tr><td><a href="#logs/${docs.data()['projectNo']}">${docs.data()['projectNo']}</a></td><tr>`)
+		  			$('#projectList').append(`<tr><td align="middle"><a href="#logs/${docs.data()['projectNo']}">${docs.data()['projectNo']}</a></td><tr>`)
 		  		});
 		  })
 }

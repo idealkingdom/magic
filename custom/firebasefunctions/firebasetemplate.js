@@ -44,6 +44,10 @@ var aPromise = new Promise((resolve,reject)=>{
                         <td style="background-color: white;">${change.doc.data()['tester']}</td>
                       </tr>
                       <tr>
+                        <td>Date Added</td>
+                        <td style="background-color: white;">${Date(change.doc.data()['stamp'])}</td>
+                      </tr>
+                      <tr>
                         <td>Description</td>
                         <td style="background-color: white;" class="descComment" id="descComment${change.doc.id}">${change.doc.data()['description']} <br/><br/>
                         <a id="h${change.doc.id}" href="${change.doc.data()['canvas'] || ''}" target="_blank"><img id="img${change.doc.id}" style="max-width:950px; min-width:0px;" class="img-fluid" src="${change.doc.data()['canvas'] || ''}" alt=""> </a> 
