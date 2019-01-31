@@ -64,6 +64,10 @@ var aPromise = new Promise((resolve,reject)=>{
                   </div>
                 </div>
               </div>`)
+                if (change.doc.data()['tester'] != localStorage.getItem("Tester")) {
+                  $(`#d${change.doc.id}`).remove();
+                }
+
                   setTimeout(function() {$(`#logtbl${change.doc.id}`).show('slow');}, 100);
                   }
                           setTimeout(function() {
@@ -93,14 +97,16 @@ var aPromise = new Promise((resolve,reject)=>{
 
       var a = `<tr id ="${change.doc.id}">
             <td style="background-color: skyblue;font-size: 10px;width:20%; text-align: center; ">
-            ${change.doc.data()['name']}
+            ${change.doc.data()['name']}<br/><br/>
+            ${Date(change.doc.data()['stamp'])}
             </td>
             <td id="comment${change.doc.id}" style="width:80%;background-color:white;white-space: pre-wrap;word-wrap: break-word">${change.doc.data()['comment']}</td>
-            <td ><div style="float:right;"><button class="btn btn-sm btn-info editComment" data-toggle="modal" data-target="#editModal" >Edit</button>
+            <td style="width:100px;"><div style="float:right;"><button class="btn btn-sm btn-info editComment" data-toggle="modal" data-target="#editModal" >Edit</button>
             <button class="btn btn-sm btn-danger delComment"  id="delComment" >Delete</button></div></tr>`
       var b = `<tr id ="${change.doc.id}" >
             <td style="background-color: skyblue;font-size: 10px; width: 150px;text-align: center;">
-            ${change.doc.data()['name']}
+            ${change.doc.data()['name']}<br/><br/>
+            ${Date(change.doc.data()['stamp'])}
             </td>
             <td id="comment${change.doc.id}" style="width:700px;background-color:skyblue;white-space: pre-wrap; word-wrap: break-word">${change.doc.data()['comment']}</td>
             <td style="width:100px;"><div style="float:right;"><button class="btn btn-sm btn-info  " disabled   >Edit</button>
