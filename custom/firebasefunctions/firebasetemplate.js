@@ -8,19 +8,23 @@ function homepageload() {
 function logspageLoad(id){
     $("#dataAppend").load('https://raw.githubusercontent.com/idealkingdom/magic/master/custom/templates/Logstemplate.html',function() {
        loadandlisten(id)
+
+
   })
 }
 
 
 
 function loadandlisten(id) {
+var aPromise = new Promise((resolve,reject)=>{
 
-setTimeout(function() {
-          db.collection("Logs").where("projectID","==",passID).orderBy("stamp", "asc").onSnapshot(function(snapshot) {
+        resolve(db.collection("Logs").where("projectID","==",passID).orderBy("stamp", "asc").onSnapshot(function(snapshot) {
               snapshot.docChanges().forEach( function(change) {
                   if (change.type === "added") {
                       console.log("Added ", change.doc.data());
-                                     $('#tblData').append(`<div class="form-group tbl" id="logtbl${change.doc.id}" align="left" style="border: 2px solid gray; padding: 10px; display:none;">
+                                     $('#tblData').append(`
+                                      <button style="float:right;" id="d${change.doc.id}" class="btn-sm delLog">X</button><div class="form-group tbl" id="logtbl${change.doc.id}" align="left" style="border: 2px solid gray; padding: 10px; display:none; margin-bottom:5%;">
+
                 <div >
                   <table>
                     <caption></caption>
@@ -46,7 +50,7 @@ setTimeout(function() {
                         </td>
                       </tr>
                       <div align="middle">
-                      <table style="margin-top: 4%;" width="800px" class="commentTbl" id="${change.doc.id}">
+                      <table style="margin-top: 4%;table-layout:fixed" width="800px" class="commentTbl" id="${change.doc.id}">
                         <tbody>
                         </tbody>
                       </table>
@@ -55,23 +59,82 @@ setTimeout(function() {
                   </div>
                   <div class="form-group">
                     <label>Comment</label>
-                    <textarea class="form-control" rows="3" style="resize: none;" width="800px"></textarea>
+                    <textarea class="form-control" rows="5" style="resize: none;" cols="40"></textarea>
                     <button type="submit" id="comment142" class="btn btn-primary submitComment" style="float:right; margin-top: 2px;">Add comment</button>
                   </div>
                 </div>
               </div>`)
                   setTimeout(function() {$(`#logtbl${change.doc.id}`).show('slow');}, 100);
-                      
                   }
+                          setTimeout(function() {
+                          $(`#h${change.doc.id}`).attr('href',change.doc.data()['canvas'])
+                          $(`#img${change.doc.id}`).attr('src',change.doc.data()['canvas'])
+              }, 5000);
                   if (change.type === "modified") {
                       console.log("modified", change.doc.data());
                   }
                   if (change.type === "removed") {
                       console.log("removed", change.doc.data());
+                      $(`#logtbl${change.doc.id}`).remove()
+                      $(`#d${change.doc.id}`).remove()
                   }
               });
           })
-}, 0);
+)  
+
+
+}).then((fetchData)=>{
+
+  db.collection("LogsComments").where("projectID","==",passID).orderBy("stamp","asc").onSnapshot(function(snapshot) {
+
+
+  snapshot.docChanges().forEach( function(change) {
+    if (change.type === "added"){
+
+      var a = `<tr id ="${change.doc.id}">
+            <td style="background-color: skyblue;font-size: 10px;width:20%; text-align: center; ">
+            ${change.doc.data()['name']}
+            </td>
+            <td id="comment${change.doc.id}" style="width:80%;background-color:white;white-space: pre-wrap;word-wrap: break-word">${change.doc.data()['comment']}</td>
+            <td ><div style="float:right;"><button class="btn btn-sm btn-info editComment" data-toggle="modal" data-target="#editModal" >Edit</button>
+            <button class="btn btn-sm btn-danger delComment"  id="delComment" >Delete</button></div></tr>`
+      var b = `<tr id ="${change.doc.id}" >
+            <td style="background-color: skyblue;font-size: 10px; width: 150px;text-align: center;">
+            ${change.doc.data()['name']}
+            </td>
+            <td id="comment${change.doc.id}" style="width:700px;background-color:skyblue;white-space: pre-wrap; word-wrap: break-word">${change.doc.data()['comment']}</td>
+            <td style="width:100px;"><div style="float:right;"><button class="btn btn-sm btn-info  " disabled   >Edit</button>
+            <button class="btn btn-sm btn-danger  " disabled  id="">Delete</button></div></td></tr>`
+              if(change.doc.data()['name'] == localStorage.getItem("Tester")){
+                console.log($(`#${change.doc.id}`).length)
+                 if ($(`#${change.doc.id}`).length < 1) {
+                    $(a).appendTo(`#${change.doc.data()['log_comment']}`).eq(0)
+                 }
+                }
+              else{
+                if ($(`#${change.doc.id}`).length < 1) {
+                     $(b).appendTo(`#${change.doc.data()['log_comment']}`).eq(0)
+                 }
+                 
+                }
+
+
+    }
+    if (change.type==="removed"){
+                              $(`#${change.doc.id}`).hide('slow/400/fast', function() {
+                              $(`#${change.doc.data()['log_comment']} > tbody > #${change.doc.id}`).remove()
+                                                      });
+    }
+    if (change.type==="modified"){
+                    $(`#comment${change.doc.id}`).text(change.doc.data()['comment'])
+                    console.log(change.doc.data()['comment'])
+    }
+  });
+
+})
+
+})
+
 // database.ref('Logs/'+id).once('value', function(snapshot) {
 //       snapshot.forEach(function(e,i) {
 //                $('#tblData').append(`<div class="form-group tbl" id="logtbl${e.key}" align="left" style="border: 2px solid gray; padding: 10px;">
@@ -180,45 +243,7 @@ setTimeout(function() {
 
 function commentLoaded (id) {
 
-  db.collection("LogsComments").where("projectID","==",passID).orderBy("stamp","asc").onSnapshot(function(snapshot) {
 
-
-  snapshot.docChanges().forEach( function(change) {
-    if (change.type === "added"){
-        setTimeout(function() {
-              if(change.doc.data()['name'] == localStorage.getItem("Tester")){
-            $(`#${change.doc.data()['log_comment']}`).eq(0).append(`<tr id ="${change.doc.id}">
-            <td style="background-color: skyblue;font-size: 10px;width:20%;">
-            ${change.doc.data()['name']}
-            </td>
-            <td id="comment${change.doc.id}" style="width:80%;background-color:white;white-space: pre-wrap;">${change.doc.data()['comment']}</td>
-            <td ><div><button class="btn btn-sm btn-info editComment" data-toggle="modal" data-target="#editModal" style="float:right;">Edit</button>
-            <button class="btn btn-sm btn-danger delComment"  id="delComment" style="float:right;">Delete</button></div></tr>`)
-              }
-              else{
-            $(`#${change.doc.data()['log_comment']}`).eq(0).append(`<tr id ="${change.doc.id}" >
-            <td style="background-color: skyblue;font-size: 10px;width:20%;">
-            ${change.doc.data()['name']}
-            </td>
-            <td id="comment${change.doc.id}" style="width:80%;background-color:skyblue;white-space: pre-wrap;">${change.doc.data()['comment']}</td>
-            <td><div><button class="btn btn-sm btn-info  " disabled   style="float:right;">Edit</button>
-            <button class="btn btn-sm btn-danger  " disabled  id="" style="float:right;">Delete</button></div></td></tr>`)
-              }
-            }, 500);
-
-    }
-    if (change.type==="removed"){
-                              $(`#${change.doc.id}`).hide('slow/400/fast', function() {
-                              $(`#${change.doc.data()['log_comment']} > tbody > #${change.doc.id}`).remove()
-                                                      });
-    }
-    if (change.type==="modified"){
-                    $(`#comment${change.doc.id}`).text(change.doc.data()['comment'])
-                    console.log(change.doc.data()['comment'])
-    }
-  });
-
-})
 
 
 //   setTimeout(function() {

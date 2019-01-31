@@ -15,10 +15,7 @@ $(document).ready(function() {
 	  	}
 	     passID = params.id
 	     sequencePromise = new Promise((resolve,reject) => {
-	     	resolve(logspageLoad(params.id))
-	     	$(window).bind("load", function() {
-	  				commentLoaded(params.id)
-			});
+	     	logspageLoad(params.id)
 	     })
 
 

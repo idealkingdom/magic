@@ -6,6 +6,14 @@ $(function() {
     var ctx2 = x.getContext("2d")
     var currentDate = new Date();
     var editC = ""
+
+    $('#tblData').on('click', '.delLog', function(event) {
+    		var id = $(this).attr('id').substring(1)
+    		firebaseDeleteLog(id)
+    });
+
+
+
     $('#tblData').on('click', '.submitComment', function(e) {
         e.preventDefault();
         if ($(this).siblings('textarea').val().trim() != '') {
@@ -66,7 +74,16 @@ $(function() {
         $('#logCanvas').html("")
         $('#addLogstextarea').val('')
     });
-
+function firebaseDeleteLog(id) {
+	db.collection("Logs").doc(id).delete().then(function() {
+		console.log(id,passID)
+		storageRef.child('imagesBlob/'+passID+'/'+id+'/'+id).delete().then(function() {
+			console.log('successfully deleted image!')
+		}).catch(function(e) {
+			console.log('Errors found or no image' + e)
+		})
+	})
+}
     function firebaseAddLogs(desc, tester, canvas) {
 		$('#btnaddLogs').attr('disabled', 'disabled');
         data = {
