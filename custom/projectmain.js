@@ -1,11 +1,23 @@
 var pmodal = $("#addProject");
 var pno = $('#addProjectNo');
 var pname = $('#addProjectName');
-var pnote = $('#addProjectNote')
+var pnote = $('#addProjectNotes')
 jQuery(document).ready(function($) {
 	$("#btnaddProject").click(function(event) {
-	firebaseAddProject(pno.val(),pname.val(),localStorage.getItem("Tester"),pnote.text());
+	if (pno.val()!= "" && pname.val()!= "" && pnote.val()!= "") {
+		firebaseAddProject(pno.val(),pname.val(),localStorage.getItem("Tester"),pnote.val());
+	}
+	else{
+		alert("Input must not be empty.");
+	}
+
+
 });
+
+	$('#projectList').on('click', '.viewing', function(event) {
+			viewDetails($(this).attr('id').substring(4));
+	});
+	
 
 function firebaseAddProject(pno,pname,tester,note) {
 	var exist = 0;
@@ -14,7 +26,7 @@ function firebaseAddProject(pno,pname,tester,note) {
 			projectName:pname,
 			tester: tester,
 		    stamp: firebase.firestore.FieldValue.serverTimestamp(),
-			Note:note}
+			note:note}
 	 db.collection("Projects").where("projectNo","==",""+pno).get().then(function(docSnapshot) {
 	 				docSnapshot.forEach( function(snap) {
 	 					if (snap.exists){
@@ -44,9 +56,23 @@ function listProject() {
 		  db.collection("Projects").orderBy("stamp","asc").get().then(function(querySnapshot) {
 		  		querySnapshot.forEach( function(docs) {
 		  			console.log(docs.data())
-		  			$('#projectList').append(`<tr><td align="middle"><a href="#logs/${docs.data()['projectNo']}">${docs.data()['projectNo']}</a></td><tr>`)
+		  			$('#projectList').append(`<tr><td align="middle" style="font-size:15px;background-color:white;"><a href="#logs/${docs.data()['projectNo']}">${docs.data()['projectNo']} - ${docs.data()['projectName']}</a></td>
+		  				<td style="background-color:#afaf9e;"><button type="" class="btn btn-sm btn-info viewing" id="view${docs.data()['projectNo']}"  class="btn btn-sm btn-info">View</button></td><tr>`)
 		  		});
 		  })
+}
+
+
+
+function viewDetails(id){
+	 db.collection("Projects").doc(id).get().then(function(querySnapshot) {
+	 	console.log(querySnapshot.data())
+	 	$("#viewProject").modal("show");
+	 	$("#viewProjectNo").val(querySnapshot.data()['projectNo'])
+	 	$("#viewProjectName").val(querySnapshot.data()['projectName'])
+	 	$("#viewProjectDate").val(Date(querySnapshot.data()['stamp']))
+	 	$("#viewProjectNotes").val(querySnapshot.data()['note'])
+	 })
 }
 
 
@@ -56,7 +82,7 @@ function listProject() {
 
 $(function() {
 pmodal.on("hide.bs.modal", function () {
-		pno.val(""),pname.val("")
+		pno.val(""),pname.val(""),pnote.val("")
 });
 });
 
